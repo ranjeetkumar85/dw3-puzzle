@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import {
   addToReadingList,
@@ -9,14 +9,19 @@ import {
 } from '@tmo/books/data-access';
 import { FormBuilder } from '@angular/forms';
 import { Book } from '@tmo/shared/models';
+import { debounceTime, distinctUntilChanged, filter, takeUntil } from 'rxjs/operators';
+import { Subject, Observable } from 'rxjs';
 
 @Component({
   selector: 'tmo-book-search',
   templateUrl: './book-search.component.html',
   styleUrls: ['./book-search.component.scss']
 })
-export class BookSearchComponent implements OnInit {
+export class BookSearchComponent implements OnInit, OnDestroy {
   books: ReadingListBook[];
+  book$: Observable<ReadingListBook[]>;
+  private destroyedFormValues$: Subject<boolean> = new Subject();
+  private destroyedAPI$: Subject<boolean> = new Subject();
 
   searchForm = this.fb.group({
     term: ''
@@ -32,9 +37,39 @@ export class BookSearchComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.store.select(getAllBooks).subscribe(books => {
-      this.books = books;
+    this.searchForm.valueChanges
+    .pipe(
+    // debounce input for 500 milliseconds
+    debounceTime(500),
+    // only emit if emission is different from previous emission
+    distinctUntilChanged(),
+    // checking if form is valid
+    filter(() => this.searchForm.valid),
+    // unsubscribe
+    takeUntil(this.destroyedFormValues$))
+    .subscribe((val)=> {
+      if (val) {
+        console.log('ranjeet:', val);
+        this.store.dispatch(searchBooks({ term: val }));
+      }
     });
+
+    // Using async pipe operator in html instead of subscribing in ts file
+    // added pipe to destroy the subscribtion
+    this.book$ = this.store.select(getAllBooks).pipe(takeUntil(this.destroyedAPI$));
+    
+    // this.store.select(getAllBooks)
+    // .pipe(takeUntil(this.destroyedAPI$))
+    // .subscribe(books => {
+    //   this.books = books;
+    // });
+  }
+
+  ngOnDestroy() {
+    this.destroyedFormValues$.next(true);
+    this.destroyedFormValues$.complete();
+    this.destroyedAPI$.next(true);
+    this.destroyedAPI$.complete();
   }
 
   formatDate(date: void | string) {
