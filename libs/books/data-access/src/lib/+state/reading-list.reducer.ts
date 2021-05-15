@@ -48,15 +48,15 @@ const readingListReducer = createReducer(
     };
   }),
 
-  // Action(addToReadingList) triggers the effects to call API to add book into reading list 
-  // And at the same time it updates the state by reducer without checking success or failure of backend APIs 
+  // Action(addToReadingList) triggers the effects to call API to add book into reading list
+  // And at the same time it updates the state by reducer without checking success or failure of backend APIs
   // updating store only on success action(confirmedAddToReadingList)
   on(ReadingListActions.confirmedAddToReadingList, (state, action) =>
     readingListAdapter.addOne({ bookId: action.book.id, ...action.book }, state)
   ),
-  
-  // Action(removeFromReadingList) triggers the effects to call API to remove book from reading list 
-  // And at the same time it updates the state by reducer without checking success or failure of backend APIs 
+
+  // Action(removeFromReadingList) triggers the effects to call API to remove book from reading list
+  // And at the same time it updates the state by reducer without checking success or failure of backend APIs
   // updating store only on success action(confirmedRemoveFromReadingList)
   on(ReadingListActions.confirmedRemoveFromReadingList, (state, action) =>
     readingListAdapter.removeOne(action.item.bookId, state)
