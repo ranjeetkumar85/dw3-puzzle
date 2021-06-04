@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import {
   addToReadingList,
@@ -9,7 +9,8 @@ import {
 } from '@tmo/books/data-access';
 import { FormBuilder } from '@angular/forms';
 import { Book } from '@tmo/shared/models';
-import { Observable } from 'rxjs';
+import { debounceTime, distinctUntilChanged, filter, takeUntil } from 'rxjs/operators';
+import { Subject, Observable } from 'rxjs';
 
 @Component({
   selector: 'tmo-book-search',
@@ -17,8 +18,9 @@ import { Observable } from 'rxjs';
   styleUrls: ['./book-search.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class BookSearchComponent implements OnInit {
+export class BookSearchComponent implements OnInit, OnDestroy {
   books$: Observable<ReadingListBook[]>;
+  private destroyedFormValues$: Subject<boolean> = new Subject();
   searchForm = this.fb.group({
     term: ''
   });
@@ -33,11 +35,33 @@ export class BookSearchComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.searchForm.valueChanges
+    .pipe(
+    // debounce input for 500 milliseconds
+    debounceTime(500),
+    // only emit if emission is different from previous emission
+    distinctUntilChanged(),
+    // checking if form is valid
+    filter(() => this.searchForm.valid),
+    // unsubscribe
+    takeUntil(this.destroyedFormValues$))
+    .subscribe((val)=> {
+      if (val?.term !== '') {
+        this.store.dispatch(searchBooks({term: val.term}));
+      } else{
+          this.store.dispatch(clearSearch());
+      }
+    });
     // Using async pipe operator in html instead of subscribing in ts file
     // No need to unsubscribe manually since we are using async in html
     // Added change detection to onpush for faster page load
     this.books$ = this.store.select(getAllBooks);
-  }
+   }
+  
+  ngOnDestroy() {
+    this.destroyedFormValues$.next(true);
+    this.destroyedFormValues$.complete();
+   }
 
   formatDate(date: void | string) {
     return date
