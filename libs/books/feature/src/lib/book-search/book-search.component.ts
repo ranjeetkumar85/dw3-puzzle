@@ -19,10 +19,7 @@ import { Subject, Observable } from 'rxjs';
 })
 export class BookSearchComponent implements OnInit, OnDestroy {
   books: ReadingListBook[];
-  book$: Observable<ReadingListBook[]>;
   private destroyedFormValues$: Subject<boolean> = new Subject();
-  private destroyedAPI$: Subject<boolean> = new Subject();
-
   searchForm = this.fb.group({
     term: ''
   });
@@ -54,23 +51,15 @@ export class BookSearchComponent implements OnInit, OnDestroy {
       }
     });
 
-    // Using async pipe operator in html instead of subscribing in ts file
-    // added pipe to destroy the subscribtion
-    this.book$ = this.store.select(getAllBooks).pipe(takeUntil(this.destroyedAPI$));
-    
-    // this.store.select(getAllBooks)
-    // .pipe(takeUntil(this.destroyedAPI$))
-    // .subscribe(books => {
-    //   this.books = books;
-    // });
+    this.store.select(getAllBooks).subscribe(books => {
+      this.books = books;
+    });
   }
-
+  
   ngOnDestroy() {
     this.destroyedFormValues$.next(true);
     this.destroyedFormValues$.complete();
-    this.destroyedAPI$.next(true);
-    this.destroyedAPI$.complete();
-  }
+   }
 
   formatDate(date: void | string) {
     return date
