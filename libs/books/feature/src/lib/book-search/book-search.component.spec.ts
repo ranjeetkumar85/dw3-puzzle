@@ -1,4 +1,6 @@
+import { FixedSizeVirtualScrollStrategy } from '@angular/cdk/scrolling';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { SharedTestingModule } from '@tmo/shared/testing';
 
@@ -17,11 +19,17 @@ describe('ProductsListComponent', () => {
 
   beforeEach(() => {
     fixture = TestBed.createComponent(BookSearchComponent);
-    component = fixture.componentInstance;
     fixture.detectChanges();
   });
 
   it('should create', () => {
     expect(component).toBeDefined();
   });
+
+  it('Should be more than zero book when user search any term', () => {
+    component.searchForm.controls['term'].patchValue('angular');
+    fixture.detectChanges();
+    expect(fixture.debugElement.queryAll( By.css('book')).length).toBeGreaterThan(0);
+  });
+
 });

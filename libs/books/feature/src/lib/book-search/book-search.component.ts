@@ -20,7 +20,7 @@ import { Subject, Observable } from 'rxjs';
 })
 export class BookSearchComponent implements OnInit, OnDestroy {
   books$: Observable<ReadingListBook[]>;
-  private destroyedFormValues$: Subject<boolean> = new Subject();
+  private destroyedFormValues$: Subject<void> = new Subject();
   searchForm = this.fb.group({
     term: ''
   });
@@ -35,19 +35,20 @@ export class BookSearchComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.searchForm.valueChanges
+    this.searchForm.get('term').valueChanges
     .pipe(
     // debounce input for 500 milliseconds
     debounceTime(500),
     // only emit if emission is different from previous emission
     distinctUntilChanged(),
     // checking if form is valid
-    filter(() => this.searchForm.valid),
+    //filter(() => this.searchForm.valid),
     // unsubscribe
     takeUntil(this.destroyedFormValues$))
     .subscribe((val)=> {
-      if (val?.term !== '') {
-        this.store.dispatch(searchBooks({term: val.term}));
+      console.log("val :"+val);
+      if (val !== '') {
+        this.store.dispatch(searchBooks({term: val}));
       } else{
           this.store.dispatch(clearSearch());
       }
@@ -59,7 +60,7 @@ export class BookSearchComponent implements OnInit, OnDestroy {
    }
   
   ngOnDestroy() {
-    this.destroyedFormValues$.next(true);
+    this.destroyedFormValues$.next();
     this.destroyedFormValues$.complete();
    }
 
@@ -75,14 +76,6 @@ export class BookSearchComponent implements OnInit, OnDestroy {
 
   searchExample() {
     this.searchForm.controls.term.setValue('javascript');
-    this.searchBooks();
   }
-
-  searchBooks() {
-    if (this.searchForm.value.term) {
-      this.store.dispatch(searchBooks({ term: this.searchTerm }));
-    } else {
-      this.store.dispatch(clearSearch());
-    }
-  }
+ 
 }
