@@ -1,4 +1,3 @@
-import { BOOKS } from './../constants/book-search-constants';
 import {
   async,
   ComponentFixture,
@@ -8,16 +7,17 @@ import {
   discardPeriodicTasks
 } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { SharedTestingModule } from '@tmo/shared/testing';
+import { SharedTestingModule, createBook } from '@tmo/shared/testing';
 import { BooksFeatureModule } from '../books-feature.module';
 import { BookSearchComponent } from './book-search.component';
-import { provideMockStore } from '@ngrx/store/testing';
-import { clearSearch, getAllBooks, searchBooks } from '@tmo/books/data-access';
-import { Store } from '@ngrx/store';
+import { provideMockStore, MockStore } from '@ngrx/store/testing';
+import { searchBooks } from '@tmo/books/data-access';
+
 describe('BookSearchComponent', () => {
   let component: BookSearchComponent;
   let fixture: ComponentFixture<BookSearchComponent>;
-  let store: Store;
+  let store: MockStore;
+
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
@@ -26,55 +26,50 @@ describe('BookSearchComponent', () => {
         SharedTestingModule
       ],
       providers: [
-        Store,
         provideMockStore({
           initialState: {
             books: {
               entities: []
             }
-          },
-          selectors: [{
-            selector: getAllBooks,
-            value: []
-          }]
+          }
         }),
       ],
     }).compileComponents();
   }));
+
   beforeEach(() => {
     fixture = TestBed.createComponent(BookSearchComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-    store = fixture.debugElement.injector.get(Store);
+    store = TestBed.inject(MockStore);
   });
 
   describe('ngOnInit()', () => {
     beforeEach(() => {
       spyOn(component.searchForm, 'valueChanges');
       spyOn(store, 'dispatch');
-      spyOn(store, 'select').and.returnValue(BOOKS);
     });
 
-    it('It should call searchBooks() when we have value for search term and actual time spent after entering search term is equal to 500ms', fakeAsync(() => {
+    it('searchBooks() should be called when we have empty value for search term and actual time spent after entering search term is equal to 500ms', fakeAsync(() => {
       component.ngOnInit();
       component.searchForm.controls.term.setValue('Angular');
+
       tick(500);
+
       component.searchForm.valueChanges.subscribe(() => {
-        expect(store.dispatch).toHaveBeenCalledTimes(1);
         expect(store.dispatch).toHaveBeenCalledWith(searchBooks({ term: 'Angular' }))
       });
     }));
 
-    it('It should populate the array of Book object', fakeAsync(() => {
+    it('clearSearch() should be called when we have value for search term and actual time spent after entering search term is equal to 500ms', fakeAsync(() => {
       component.ngOnInit();
-      component.searchForm.controls.term.setValue('');
+      component.searchForm.controls.term.setValue('Java');
+
       tick(400);
-      component.searchForm.valueChanges.subscribe(() => {
-        expect(store.dispatch).toHaveBeenCalledTimes(1);
-        expect(store.dispatch).toHaveBeenCalledWith(clearSearch())
-      });
-      expect(component.books$).toEqual(BOOKS);
+
+      expect(store.dispatch).not.toHaveBeenCalled();
       discardPeriodicTasks();
     }));
   });
 });
+
