@@ -42,9 +42,10 @@ export class BookSearchComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.store.select(getAllBooks).subscribe(books => {
-      this.books = books;
-    });
+    // Using async pipe operator in html instead of subscribing in ts file
+    // No need to unsubscribe manually since we are using async in html
+    // Added change detection to onpush for faster page load
+    this.books$ = this.store.select(getAllBooks);
   }
 
   formatDate(date: void | string) {
