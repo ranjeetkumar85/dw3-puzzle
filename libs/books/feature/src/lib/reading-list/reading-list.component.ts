@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { getReadingList, removeFromReadingList } from '@tmo/books/data-access';
-
+import { getReadingList, markReadToReadingList, removeFromReadingList } from '@tmo/books/data-access';
+import { ReadingListItem } from '@tmo/shared/models';
 @Component({
   selector: 'tmo-reading-list',
   templateUrl: './reading-list.component.html',
@@ -14,5 +14,14 @@ export class ReadingListComponent {
 
   removeFromReadingList(item) {
     this.store.dispatch(removeFromReadingList({ item }));
+  }
+
+  toggleFinishReadingList(item: ReadingListItem) {
+    const finishedBook = {
+      ...item, 
+      finished: item.finished ? false : true,
+      finishedDate: item.finished ? '' : new Date().toISOString()
+    }
+    this.store.dispatch(markReadToReadingList({item: finishedBook}));
   }
 }

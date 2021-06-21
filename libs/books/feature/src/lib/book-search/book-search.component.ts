@@ -1,16 +1,15 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { Store } from '@ngrx/store';
+import { ActionsSubject, Store } from '@ngrx/store';
 import {
   addToReadingList,
   clearSearch,
   getAllBooks,
+  getReadingList,
   ReadingListBook,
   searchBooks
 } from '@tmo/books/data-access';
 import { FormBuilder } from '@angular/forms';
-import { Book } from '@tmo/shared/models';
-import { Observable } from 'rxjs';
-
+import { Book, ReadingListItem } from '@tmo/shared/models';
 @Component({
   selector: 'tmo-book-search',
   templateUrl: './book-search.component.html',
@@ -18,12 +17,16 @@ import { Observable } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BookSearchComponent implements OnInit {
-  books$: Observable<ReadingListBook[]>;
+  books: ReadingListBook[];
+  books$ = this.store.select(getAllBooks);
+  readingList: ReadingListItem[];
+
   searchForm = this.fb.group({
     term: ''
   });
 
   constructor(
+    private actionListener$: ActionsSubject,
     private readonly store: Store,
     private readonly fb: FormBuilder
   ) {}
@@ -33,10 +36,13 @@ export class BookSearchComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // Using async pipe operator in html instead of subscribing in ts file
-    // No need to unsubscribe manually since we are using async in html
-    // Added change detection to onpush for faster page load
-    this.books$ = this.store.select(getAllBooks);
+    this.store.select(getAllBooks).subscribe(books => {
+      this.books = books;
+    });
+
+    this.store.select(getReadingList).subscribe(readingBooks => {
+      this.readingList = readingBooks;
+    });
   }
 
   formatDate(date: void | string) {
@@ -60,5 +66,9 @@ export class BookSearchComponent implements OnInit {
     } else {
       this.store.dispatch(clearSearch());
     }
+  }
+
+  isFinished(bookId: string) {
+    return this.readingList.findIndex((item) => (item.bookId === bookId && item.finished)) > -1;
   }
 }
