@@ -4,7 +4,7 @@ describe('When: Use the search feature', () => {
   });
 
   it('Then: I should be able to search books by title', () => {
-    cy.get('input[type="search"]').type('angular');
+    cy.get('input[type="search"]').type('javascript');
 
     cy.get('form').submit();
 
