@@ -27,7 +27,7 @@ export class BookSearchComponent implements OnInit, OnDestroy {
   constructor(
     private readonly store: Store,
     private readonly fb: FormBuilder
-  ) { }
+  ) {}
 
   get searchTerm(): string {
     return this.searchForm.value.term;
@@ -39,9 +39,9 @@ export class BookSearchComponent implements OnInit, OnDestroy {
         debounceTime(500),
         distinctUntilChanged(),
         takeUntil(this.destroyedFormValues$))
-      .subscribe((val) => {
-        if (val) {
-          this.store.dispatch(searchBooks({ term: val }));
+      .subscribe((searchTerm) => {
+        if (searchTerm) {
+          this.store.dispatch(searchBooks({ term: searchTerm }));
         } else {
           this.store.dispatch(clearSearch());
         }

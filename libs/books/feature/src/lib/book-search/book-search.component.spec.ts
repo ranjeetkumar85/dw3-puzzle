@@ -50,7 +50,7 @@ describe('BookSearchComponent', () => {
       spyOn(store, 'dispatch');
     });
 
-    it('searchBooks() should be called when we have empty value for search term and actual time spent after entering search term is equal to 500ms', fakeAsync(() => {
+    it('searchBooks() should be called when we have value for search term and actual time spent after entering search term is equal to 500ms', fakeAsync(() => {
       component.ngOnInit();
       component.searchForm.controls.term.setValue('Angular');
 
@@ -61,7 +61,7 @@ describe('BookSearchComponent', () => {
       });
     }));
 
-    it('No action should be called when we have value for search term and actual time spent after entering search term is less than 500ms', fakeAsync(() => {
+    it('No action should be dispatched when we have value for search term and actual time spent after entering search term is less than 500ms', fakeAsync(() => {
       component.ngOnInit();
       component.searchForm.controls.term.setValue('Java');
 
