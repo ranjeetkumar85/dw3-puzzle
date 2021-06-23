@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import {
   addToReadingList,
@@ -15,7 +15,8 @@ import { Subject, Observable } from 'rxjs';
 @Component({
   selector: 'tmo-book-search',
   templateUrl: './book-search.component.html',
-  styleUrls: ['./book-search.component.scss']
+  styleUrls: ['./book-search.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BookSearchComponent implements OnInit, OnDestroy {
   books$: Observable<ReadingListBook[]> = this.store.select(getAllBooks);
@@ -34,6 +35,10 @@ export class BookSearchComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    // Using async pipe operator in html instead of subscribing in ts file
+    // No need to unsubscribe manually since we are using async in html
+    // Added change detection to onpush for faster page load
+    this.books$ = this.store.select(getAllBooks);
     this.searchForm.get('term').valueChanges
       .pipe(
         debounceTime(500),
