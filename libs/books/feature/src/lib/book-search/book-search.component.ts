@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import {
   addToReadingList,
@@ -9,7 +9,8 @@ import {
 } from '@tmo/books/data-access';
 import { FormBuilder } from '@angular/forms';
 import { Book } from '@tmo/shared/models';
-import { Observable } from 'rxjs';
+import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
+import { Subject, Observable } from 'rxjs';
 
 @Component({
   selector: 'tmo-book-search',
@@ -17,8 +18,9 @@ import { Observable } from 'rxjs';
   styleUrls: ['./book-search.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class BookSearchComponent implements OnInit {
-  books$: Observable<ReadingListBook[]>;
+export class BookSearchComponent implements OnInit, OnDestroy {
+  books$: Observable<ReadingListBook[]> = this.store.select(getAllBooks);
+  private destroyedFormValues$: Subject<void> = new Subject();
   searchForm = this.fb.group({
     term: ''
   });
@@ -37,6 +39,23 @@ export class BookSearchComponent implements OnInit {
     // No need to unsubscribe manually since we are using async in html
     // Added change detection to onpush for faster page load
     this.books$ = this.store.select(getAllBooks);
+    this.searchForm.get('term').valueChanges
+      .pipe(
+        debounceTime(500),
+        distinctUntilChanged(),
+        takeUntil(this.destroyedFormValues$))
+      .subscribe((searchTerm) => {
+        if (searchTerm) {
+          this.store.dispatch(searchBooks({ term: searchTerm }));
+        } else {
+          this.store.dispatch(clearSearch());
+        }
+      });
+  }
+  
+  ngOnDestroy(): void {
+    this.destroyedFormValues$.next();
+    this.destroyedFormValues$.complete();
   }
 
   formatDate(date: void | string) {
@@ -51,14 +70,6 @@ export class BookSearchComponent implements OnInit {
 
   searchExample() {
     this.searchForm.controls.term.setValue('javascript');
-    this.searchBooks();
   }
 
-  searchBooks() {
-    if (this.searchForm.value.term) {
-      this.store.dispatch(searchBooks({ term: this.searchTerm }));
-    } else {
-      this.store.dispatch(clearSearch());
-    }
-  }
 }
