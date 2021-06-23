@@ -1,5 +1,5 @@
 <ng-container *ngIf="(readingList$ | async).length > 0; else empty">
-  <div class="reading-list-item" *ngFor="let b of readingList$ | async">
+  <div data-testing="reading-list-item" class="reading-list-item" *ngFor="let b of readingList$ | async">
     <div>
       <img class="reading-list-item--cover" [src]="b.coverUrl" />
     </div>
@@ -8,7 +8,7 @@
       <div class="reading-list-item--details--author">
         {{ b.authors.join(',') }}
       </div>
-      <div *ngIf="b.finished" class="reading-list-item--details--author">
+      <div *ngIf="b.finished" class="reading-list-item--details--author" data-testing="toggle-finish-date">
         Finish reading at {{ b.finishedDate }}
       </div>
     </div>
@@ -17,7 +17,7 @@
         mat-icon-button
         color="warn"
         [attr.aria-label]="'Remove ' + b.title + ' from reading list'"
-        (click)="removeFromReadingList(b)"
+        (click)="removeFromReadingList(b)" data-testing="toggle-remove-book"
       >
         <mat-icon>remove_circle</mat-icon>
       </button>
@@ -25,7 +25,7 @@
     <div>
       <button
         mat-icon-button
-        data-testing="toggle-finish-book"
+        data-testing="toggle-finish-book-cta"
         [ngClass]="b.finished ? 'mat-icon-button-green' : 'mat-icon-button-gray'"
         [attr.aria-label]="'Mark Read ' + b.title + ' from reading list'"
         (click)="toggleFinishReadingList(b)"
