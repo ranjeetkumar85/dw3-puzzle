@@ -14,7 +14,7 @@ describe('When: I use the reading list feature', () => {
     );
   });
 
-  it('Then: I should be able to mark finished the book', () => {
+  it('Then: I should be able to mark the book as finished', () => {
     cy.get('input[type="search"]').type('angular');
 
     cy.get('form').submit();
@@ -30,12 +30,31 @@ describe('When: I use the reading list feature', () => {
       'My Reading List'
     );
     
-    cy.get('[data-testing="toggle-finish-book-cta"]').first().click();
+    cy.get('[data-testing="toggle-finish-book-cta"].mat-icon-button-gray').first().click();
 
     cy.get('[data-testing="toggle-finish-date"]').first().should('contain.text', 'Finish reading');
 
-    cy.get('[data-testing="toggle-remove-book"]').first().click();
-
-    cy.get('[data-testing="reading-list-item"]').should('have.length', readingItemsCount);
   });
+
+  it('Then: I should be able to mark the book as unfinished', () => {
+    cy.get('input[type="search"]').type('angular');
+
+    cy.get('form').submit();
+
+    cy.get('[data-testing="cta-add-to-reading-list"]:enabled').first().click();
+
+    cy.get('[data-testing="toggle-reading-list"]').click();
+
+    cy.get('[data-testing="reading-list-item"]').should('have.lengthOf.above', readingItemsCount);
+
+    cy.get('[data-testing="reading-list-container"]').should(
+      'contain.text',
+      'My Reading List'
+    );
+    
+    cy.get('[data-testing="toggle-finish-book-cta"].mat-icon-button-green').first().click();
+
+    cy.get('[data-testing="toggle-finish-date"]').eq(null);
+
+   });
 });
