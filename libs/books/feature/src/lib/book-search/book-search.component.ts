@@ -5,16 +5,12 @@ import {
   clearSearch,
   getAllBooks,
   ReadingListBook,
-  removeFromReadingList,
   searchBooks
 } from '@tmo/books/data-access';
 import { FormBuilder } from '@angular/forms';
 import { Book } from '@tmo/shared/models';
-import {
-  MatSnackBar,
-  MatSnackBarHorizontalPosition,
-  MatSnackBarVerticalPosition,
-} from '@angular/material/snack-bar';
+import { Observable } from 'rxjs';
+
 @Component({
   selector: 'tmo-book-search',
   templateUrl: './book-search.component.html',
@@ -22,17 +18,12 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BookSearchComponent implements OnInit {
-  books: ReadingListBook[];
-  books$ = this.store.select(getAllBooks);
-  horizontalPosition: MatSnackBarHorizontalPosition = 'center';
-  verticalPosition: MatSnackBarVerticalPosition = 'top';
-
+  books$: Observable<ReadingListBook[]>;
   searchForm = this.fb.group({
     term: ''
   });
 
   constructor(
-    private _snackBar: MatSnackBar,
     private readonly store: Store,
     private readonly fb: FormBuilder
   ) {}
@@ -55,8 +46,7 @@ export class BookSearchComponent implements OnInit {
   }
 
   addBookToReadingList(book: Book) {
-    this.store.dispatch(addToReadingList({ book }));
-    this.openSnackBar('Book added to list', book);
+    this.store.dispatch(addToReadingList({ book: {...book, isOpenSnackBar: true} }));
   }
 
   searchExample() {
@@ -70,21 +60,5 @@ export class BookSearchComponent implements OnInit {
     } else {
       this.store.dispatch(clearSearch());
     }
-  }
-
-  openSnackBar(message: string, book: Book) {
-    const snackBarRef = this._snackBar.open(message, 'Undo', {
-      horizontalPosition: this.horizontalPosition,
-      verticalPosition: this.verticalPosition,
-      duration: 3000
-    });
-    
-    snackBarRef.onAction().subscribe(() => {
-      const item = {
-        ...book,
-        bookId: book.id
-      };
-      this.store.dispatch(removeFromReadingList({ item }));
-    });
   }
 }

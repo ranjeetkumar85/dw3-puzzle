@@ -41,3 +41,8 @@ export const confirmedRemoveFromReadingList = createAction(
   '[Reading List API] Confirmed remove from list',
   props<{ item: ReadingListItem }>()
 );
+
+export const openSnackBar = createAction(
+  '[Reading List] Open snack bar',
+  props<{ item: Book | ReadingListItem, message: string, isAdded: boolean }>()
+);
