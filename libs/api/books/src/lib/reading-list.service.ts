@@ -30,14 +30,7 @@ export class ReadingListService {
   }
 
   async finishBook(id: string, finishedBook: ReadingListItem): Promise<void> {
-    this.storage.update(list => {
-      list.filter(x => x.bookId === id).map((item) => {
-        item.finished = finishedBook.finished;
-        item.finishedDate = finishedBook.finishedDate;
-      });
-      return list;
-    });
-   
+     
     this.storage.update(list => {
       return list.map(book => {
         return book.bookId !== id ? book : { ...book, finishedDate: finishedBook.finishedDate, finished: finishedBook.finished };

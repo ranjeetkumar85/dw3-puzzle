@@ -53,6 +53,6 @@ export const failedMarkBookAsFinished  = createAction(
 );
 
 export const confirmedMarkBookAsFinished = createAction(
-  '[Reading List API] Confirmed on marking book as finished',
+  '[Reading List API] Confirmed mark book as finished',
   props<{ item: ReadingListItem }>()
 );
