@@ -32,7 +32,7 @@ describe('When: I use the reading list feature', () => {
     
     cy.get('[data-testing="finish-book-cta"]:enabled').first().click();
 
-    cy.get('[data-testing="toggle-finish-date"]').first().should('contain.text', 'Finished reading');
+    cy.get('[data-testing="finish-date"]').first().should('contain.text', 'Finished reading');
 
   });
 });

@@ -37,5 +37,11 @@ export class ReadingListService {
       });
       return list;
     });
+   
+    this.storage.update(list => {
+      return list.map(book => {
+        return book.bookId !== id ? book : { ...book, finishedDate: finishedBook.finishedDate, finished: finishedBook.finished };
+      });
+    });
   }
 }

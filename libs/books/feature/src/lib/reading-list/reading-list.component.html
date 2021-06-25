@@ -8,8 +8,8 @@
       <div class="reading-list-item--details--author">
         {{ b.authors.join(',') }}
       </div>
-      <div *ngIf="b.finished" class="reading-list-item--details--author" data-testing="toggle-finish-date">
-        Finished reading on {{ b.finishedDate | date:'shortDate' }}
+      <div *ngIf="b.finished" class="reading-list-item--details--author" data-testing="finish-date">
+        Finished reading on {{ b.finishedDate | date:'M/d/yyyy' }}
       </div>
     </div>
     <div>
@@ -27,8 +27,8 @@
       <button
         mat-icon-button
         data-testing="finish-book-cta"
-        [ngClass]="'mat-icon-button-green'"
-        [attr.aria-label]="'Mark Read ' + b.title + ' from reading list'"
+        class="'mat-icon-button-green'"
+        [attr.aria-label]="'Mark ' + b.title + ' book as finished in reading list'"
         [attr.title]="b.finished ? 'Marked as finished' : 'Click here to mark as finished'"
         [disabled]="b.finished"
         (click)="markBookAsRead(b)"
