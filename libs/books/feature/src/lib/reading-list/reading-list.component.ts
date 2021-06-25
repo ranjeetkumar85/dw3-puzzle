@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { getReadingList, markReadToReadingList, removeFromReadingList } from '@tmo/books/data-access';
+import { getReadingList, markBookAsFinished, removeFromReadingList } from '@tmo/books/data-access';
 import { ReadingListItem } from '@tmo/shared/models';
 @Component({
   selector: 'tmo-reading-list',
@@ -17,6 +17,6 @@ export class ReadingListComponent {
   }
 
   markBookAsRead(item: ReadingListItem) {
-    this.store.dispatch(markReadToReadingList({item : {...item, finished: true, finishedDate: new Date().toISOString()} }));
+    this.store.dispatch(markBookAsFinished({item : {...item, finished: true, finishedDate: new Date().toISOString()} }));
   }
 }
