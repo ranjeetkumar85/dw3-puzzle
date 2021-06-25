@@ -33,12 +33,12 @@
           <div>
             <button
               mat-flat-button
-              data-testing="cta-add-to-reading-list"
+              data-testing="add-to-reading-list"
               color="primary"
               (click)="addBookToReadingList(b)"
               [disabled]="b.isAdded"
             >
-            <span *ngIf="!isFinished(b.id); else finished">Want to Read</span>
+            <span>{{ b.finished ? 'Finished' : 'Want to Read' }}</span>
             </button>
           </div>
         </div>
@@ -54,7 +54,4 @@
       >".
     </p>
   </div>
-</ng-template>
-<ng-template #finished>
-  Finished
 </ng-template>

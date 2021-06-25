@@ -9,7 +9,7 @@
         {{ b.authors.join(',') }}
       </div>
       <div *ngIf="b.finished" class="reading-list-item--details--author" data-testing="toggle-finish-date">
-        Finish reading at {{ b.finishedDate }}
+        Finished reading on {{ b.finishedDate | date:'shortDate' }}
       </div>
     </div>
     <div>
@@ -17,6 +17,7 @@
         mat-icon-button
         color="warn"
         [attr.aria-label]="'Remove ' + b.title + ' from reading list'"
+        title="Click here to remove book"
         (click)="removeFromReadingList(b)" data-testing="toggle-remove-book"
       >
         <mat-icon>remove_circle</mat-icon>
@@ -25,10 +26,12 @@
     <div>
       <button
         mat-icon-button
-        data-testing="toggle-finish-book-cta"
-        [ngClass]="b.finished ? 'mat-icon-button-green' : 'mat-icon-button-gray'"
+        data-testing="finish-book-cta"
+        [ngClass]="'mat-icon-button-green'"
         [attr.aria-label]="'Mark Read ' + b.title + ' from reading list'"
-        (click)="toggleFinishReadingList(b)"
+        [attr.title]="b.finished ? 'Marked as finished' : 'Click here to mark as finished'"
+        [disabled]="b.finished"
+        (click)="markBookAsRead(b)"
       >
         <mat-icon>check_circle</mat-icon>
       </button>

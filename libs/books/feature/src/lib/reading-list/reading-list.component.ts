@@ -16,12 +16,7 @@ export class ReadingListComponent {
     this.store.dispatch(removeFromReadingList({ item }));
   }
 
-  toggleFinishReadingList(item: ReadingListItem) {
-    const finishedBook = {
-      ...item, 
-      finished: item.finished ? false : true,
-      finishedDate: item.finished ? '' : new Date().toISOString()
-    }
-    this.store.dispatch(markReadToReadingList({item: finishedBook}));
+  markBookAsRead(item: ReadingListItem) {
+    this.store.dispatch(markReadToReadingList({item : {...item, finished: true, finishedDate: new Date().toISOString()} }));
   }
 }

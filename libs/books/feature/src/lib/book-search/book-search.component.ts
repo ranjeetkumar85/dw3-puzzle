@@ -1,15 +1,15 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { ActionsSubject, Store } from '@ngrx/store';
+import { Store } from '@ngrx/store';
 import {
   addToReadingList,
   clearSearch,
   getAllBooks,
-  getReadingList,
   ReadingListBook,
   searchBooks
 } from '@tmo/books/data-access';
 import { FormBuilder } from '@angular/forms';
-import { Book, ReadingListItem } from '@tmo/shared/models';
+import { Book } from '@tmo/shared/models';
+import { Observable } from 'rxjs';
 @Component({
   selector: 'tmo-book-search',
   templateUrl: './book-search.component.html',
@@ -17,16 +17,13 @@ import { Book, ReadingListItem } from '@tmo/shared/models';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BookSearchComponent implements OnInit {
-  books: ReadingListBook[];
-  books$ = this.store.select(getAllBooks);
-  readingList: ReadingListItem[];
+  books$: Observable<ReadingListBook[]>;
 
   searchForm = this.fb.group({
     term: ''
   });
 
   constructor(
-    private actionListener$: ActionsSubject,
     private readonly store: Store,
     private readonly fb: FormBuilder
   ) {}
@@ -36,13 +33,10 @@ export class BookSearchComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.store.select(getAllBooks).subscribe(books => {
-      this.books = books;
-    });
-
-    this.store.select(getReadingList).subscribe(readingBooks => {
-      this.readingList = readingBooks;
-    });
+    // Using async pipe operator in html instead of subscribing in ts file
+    // No need to unsubscribe manually since we are using async in html
+    // Added change detection to onpush for faster page load
+    this.books$ = this.store.select(getAllBooks);
   }
 
   formatDate(date: void | string) {
@@ -66,9 +60,5 @@ export class BookSearchComponent implements OnInit {
     } else {
       this.store.dispatch(clearSearch());
     }
-  }
-
-  isFinished(bookId: string) {
-    return this.readingList.findIndex((item) => (item.bookId === bookId && item.finished)) > -1;
   }
 }

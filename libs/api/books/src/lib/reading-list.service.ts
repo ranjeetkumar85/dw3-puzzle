@@ -31,10 +31,10 @@ export class ReadingListService {
 
   async finishBook(id: string, finishedBook: ReadingListItem): Promise<void> {
     this.storage.update(list => {
-      list.filter(x => x.bookId === id).forEach((item) => {
+      list.filter(x => x.bookId === id).map((item) => {
         item.finished = finishedBook.finished;
         item.finishedDate = finishedBook.finishedDate;
-      })
+      });
       return list;
     });
   }

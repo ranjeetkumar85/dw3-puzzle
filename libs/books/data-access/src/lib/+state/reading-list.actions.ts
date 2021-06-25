@@ -43,7 +43,7 @@ export const confirmedRemoveFromReadingList = createAction(
 );
 
 export const markReadToReadingList = createAction(
-  '[Books Search Results] Mark read to list',
+  '[Reading List API] Mark read to list',
   props<{ item: ReadingListItem }>()
 );
 

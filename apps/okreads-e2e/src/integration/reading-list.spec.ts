@@ -19,7 +19,7 @@ describe('When: I use the reading list feature', () => {
 
     cy.get('form').submit();
 
-    cy.get('[data-testing="cta-add-to-reading-list"]:enabled').first().click();
+    cy.get('[data-testing="add-to-reading-list"]:enabled').first().click();
 
     cy.get('[data-testing="toggle-reading-list"]').click();
 
@@ -30,7 +30,7 @@ describe('When: I use the reading list feature', () => {
       'My Reading List'
     );
     
-    cy.get('[data-testing="toggle-finish-book-cta"].mat-icon-button-gray').first().click();
+    cy.get('[data-testing="finish-book-cta"].mat-icon-button-gray').first().click();
 
     cy.get('[data-testing="toggle-finish-date"]').first().should('contain.text', 'Finish reading');
 
@@ -41,7 +41,7 @@ describe('When: I use the reading list feature', () => {
 
     cy.get('form').submit();
 
-    cy.get('[data-testing="cta-add-to-reading-list"]:enabled').first().click();
+    cy.get('[data-testing="add-to-reading-list"]:enabled').first().click();
 
     cy.get('[data-testing="toggle-reading-list"]').click();
 
@@ -52,7 +52,7 @@ describe('When: I use the reading list feature', () => {
       'My Reading List'
     );
     
-    cy.get('[data-testing="toggle-finish-book-cta"].mat-icon-button-green').first().click();
+    cy.get('[data-testing="finish-book-cta"].mat-icon-button-green').first().click();
 
     cy.get('[data-testing="toggle-finish-date"]').eq(null);
 
