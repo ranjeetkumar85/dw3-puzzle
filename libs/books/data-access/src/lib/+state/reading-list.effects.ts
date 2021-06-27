@@ -5,7 +5,6 @@ import { of } from 'rxjs';
 import {
   catchError,
   concatMap,
-  switchMap,
   exhaustMap,
   map,
   filter
@@ -15,8 +14,10 @@ import * as ReadingListActions from './reading-list.actions';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Store } from '@ngrx/store';
 
-const UNDO = 'Undo';
-const DURATION = 4000;
+const SNACH_BAR_CONFIG = {
+  UNDO_ACTION: 'Undo',
+  DURATION: 4000
+}
 
 @Injectable()
 export class ReadingListEffects implements OnInitEffects {
@@ -66,64 +67,49 @@ export class ReadingListEffects implements OnInitEffects {
     )
   );
 
-  undoAddtoReadingList$ = createEffect(() =>
-    this.actions$.pipe(
-      ofType(ReadingListActions.confirmedAddToReadingList),
-      filter(({book}) => book.isOpenSnackBar),
-      switchMap(({ book }) => {
-        return of(
-          ReadingListActions.openSnackBar({
-            item: { ...book, bookId: book.id, isOpenSnackBar: false },
-            message: `${book.title}: added to reading list`,
-            isAdded: true
-          })
-        );
-      })
+  @Effect({ dispatch: false })
+  undoAddtoReadingList$ = this.actions$.pipe(
+    ofType(ReadingListActions.confirmedAddToReadingList),
+    filter(({book}) => book.isOpenSnackBar),
+    map(({ book }) =>
+      this.openSnackBar(
+        { ...book, bookId: book.id, isOpenSnackBar: false }, 
+        `${book.title}: added to reading list`,
+        true)
     )
   );
 
-  undoRemoveFromReadingList$ = createEffect(() =>
-    this.actions$.pipe(
-      ofType(ReadingListActions.confirmedRemoveFromReadingList),
-      filter(({item}) => item.isOpenSnackBar),
-      switchMap(({ item }) => {
-        return of(
-          ReadingListActions.openSnackBar({
-            item: { id: item.bookId, ...item, isOpenSnackBar: false },
-            message: `${item.title}: removed from reading list`,
-            isAdded: false
-          })
-        );
-      })
-    )
-  );
 
   @Effect({ dispatch: false })
-  openSnackBar$ = this.actions$.pipe(
-    ofType(ReadingListActions.openSnackBar),
-    map(({ item, message, isAdded }) =>
-      this.openSnackbar(message)
-        .onAction()
-        .subscribe(() =>
-          isAdded ?
-            this.store.dispatch(
-              ReadingListActions.removeFromReadingList({
-                item: item as ReadingListItem
-              })
-            ) :
-            this.store.dispatch(
-              ReadingListActions.addToReadingList({
-                book: item as Book
-              })
-            )
-        )
+  undoRemoveFromReadingList$ = this.actions$.pipe(
+    ofType(ReadingListActions.confirmedRemoveFromReadingList),
+    filter(({item}) => item.isOpenSnackBar),
+    map(({ item }) =>
+      this.openSnackBar(
+        { id: item.bookId, ...item, isOpenSnackBar: false }, 
+        `${item.title}: removed from reading list`,
+        false)
     )
   );
 
-  openSnackbar(message: string) {
-    return this.snackBar.open(message, UNDO, {
-      duration: DURATION
-    });
+  openSnackBar(item: ReadingListItem | Book, message: string, isAdded: boolean) {      
+    this.snackBar.open(message, SNACH_BAR_CONFIG.UNDO_ACTION, {
+      duration: SNACH_BAR_CONFIG.DURATION
+    })
+    .onAction()
+    .subscribe(() =>
+      isAdded ?
+        this.store.dispatch(
+          ReadingListActions.removeFromReadingList({
+            item: item as ReadingListItem
+          })
+        ) :
+        this.store.dispatch(
+          ReadingListActions.addToReadingList({
+            book: item as Book
+          })
+        )
+    )
   }
 
   ngrxOnInitEffects() {
