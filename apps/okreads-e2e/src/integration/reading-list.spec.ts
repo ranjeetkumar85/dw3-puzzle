@@ -1,6 +1,8 @@
 describe('When: I use the reading list feature', () => {
+  let readingItemsCount = 0;
   beforeEach(() => {
     cy.startAt('/');
+    readingItemsCount = cy.$$('[data-testing="reading-list-item"]').length;
   });
 
   it('Then: I should see my reading list', () => {
@@ -12,28 +14,29 @@ describe('When: I use the reading list feature', () => {
     );
   });
 
-  it('Then: I should be able to undo remove book', () => {
+
+  it('Then: I should be able to remove book and undo removed book', () => {
     cy.get('input[type="search"]').type('angular');
 
     cy.get('form').submit();
 
-    let isClicked = false;
-    cy.get('[data-testing="cta-add-to-reading-list"]').each((ele, index, list) => {
-      if (ele[0].innerText === 'Want to Read' && !isClicked) {
-        ele.click();
-        isClicked = true;
-      }
-    });
-    cy.wait(1000);
+    cy.get('[data-testing="add-item"]:enabled').first().click();
 
-    cy.get('.mat-simple-snackbar span').should("contain", 'Book added to list');
+    cy.get('[data-testing="reading-list-item"]').should('have.lengthOf.above', readingItemsCount);
 
     cy.get('[data-testing="toggle-reading-list"]').click();
 
-    cy.get('.mat-simple-snackbar-action button').then(($els) => {
-      cy.wait(3000);
-      $els.click();
-    });
+    cy.get('[data-testing="remove-item"]:enabled').first().click();
 
+    cy.get('.mat-simple-snackbar span').should("contain", 'removed from reading list');
+
+    cy.get('[data-testing="reading-list-item"]').should('have.length', readingItemsCount);
+
+    //undo remove from reading list
+    cy.get('.mat-simple-snackbar-action button').then(($snackBarCta) => {
+      $snackBarCta.trigger('click');
+      cy.get('[data-testing="reading-list-item"]').should('have.lengthOf.above', readingItemsCount);
+    });
   });
+  
 });
