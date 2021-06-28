@@ -67,49 +67,52 @@ export class ReadingListEffects implements OnInitEffects {
     )
   );
 
-  @Effect({ dispatch: false })
-  undoAddtoReadingList$ = this.actions$.pipe(
-    ofType(ReadingListActions.confirmedAddToReadingList),
-    filter(({book}) => book.isOpenSnackBar),
-    map(({ book }) =>
-      this.openSnackBar(
-        { ...book, bookId: book.id, isOpenSnackBar: false }, 
-        `${book.title}: added to reading list`,
-        true)
-    )
+  undoAddtoReadingList$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(ReadingListActions.confirmedAddToReadingList),
+      filter(({ book }) => book.isOpenSnackBar),
+      map(({ book }) =>
+        this.openSnackBar(
+          { ...book, bookId: book.id, isOpenSnackBar: false },
+          `${book.title}: added to reading list`,
+          true)
+      ),
+    ),
+    { dispatch: false }
   );
 
-
-  @Effect({ dispatch: false })
-  undoRemoveFromReadingList$ = this.actions$.pipe(
-    ofType(ReadingListActions.confirmedRemoveFromReadingList),
-    filter(({item}) => item.isOpenSnackBar),
-    map(({ item }) =>
-      this.openSnackBar(
-        { ...item, id: item.bookId,  isOpenSnackBar: false }, 
-        `${item.title}: removed from reading list`,
-        false)
-    )
+  undoRemoveFromReadingList$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(ReadingListActions.confirmedRemoveFromReadingList),
+      filter(({ item }) => item.isOpenSnackBar),
+      map(({ item }) =>
+        this.openSnackBar(
+          { ...item, id: item.bookId, isOpenSnackBar: false },
+          `${item.title}: removed from reading list`,
+          false)
+      )
+    ),
+    { dispatch: false }
   );
 
-  openSnackBar(item: ReadingListItem | Book, message: string, isAdded: boolean) {      
+  openSnackBar(item: ReadingListItem | Book, message: string, isAdded: boolean): void {
     this.snackBar.open(message, SNACK_BAR_CONFIG.UNDO_ACTION, {
       duration: SNACK_BAR_CONFIG.DURATION
     })
-    .onAction()
-    .subscribe(() =>
-      isAdded ?
-        this.store.dispatch(
-          ReadingListActions.removeFromReadingList({
-            item: item as ReadingListItem
-          })
-        ) :
-        this.store.dispatch(
-          ReadingListActions.addToReadingList({
-            book: item as Book
-          })
-        )
-    )
+      .onAction()
+      .subscribe(() =>
+        isAdded ?
+          this.store.dispatch(
+            ReadingListActions.removeFromReadingList({
+              item: item as ReadingListItem
+            })
+          ) :
+          this.store.dispatch(
+            ReadingListActions.addToReadingList({
+              book: item as Book
+            })
+          )
+      )
   }
 
   ngrxOnInitEffects() {
@@ -121,5 +124,5 @@ export class ReadingListEffects implements OnInitEffects {
     private http: HttpClient,
     private readonly snackBar: MatSnackBar,
     private readonly store: Store
-  ) {}
+  ) { }
 }
