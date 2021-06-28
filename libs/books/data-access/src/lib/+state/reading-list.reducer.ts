@@ -10,6 +10,7 @@ export interface State extends EntityState<ReadingListItem> {
   loaded: boolean;
   error: null | string;
 }
+
 export interface ReadingListPartialState {
   readonly [READING_LIST_FEATURE_KEY]: State;
 }
