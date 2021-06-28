@@ -1,17 +1,14 @@
-describe('When: Use the search feature', () => {
+describe('When: I use the reading list feature', () => {
   beforeEach(() => {
     cy.startAt('/');
   });
 
-  it('Then: I should be able to search books by title', () => {
-    cy.get('input[type="search"]').type('javascript');
+  it('Then: I should see my reading list', () => {
+    cy.get('[data-testing="toggle-reading-list"]').click();
 
-    cy.get('form').submit();
-
-    cy.get('[data-testing="book-item"]').should('have.length.greaterThan', 1);
-  });
-
-  xit('Then: I should see search results as I am typing', () => {
-    // TODO: Implement this test!
+    cy.get('[data-testing="reading-list-container"]').should(
+      'contain.text',
+      'My Reading List'
+    );
   });
 });
