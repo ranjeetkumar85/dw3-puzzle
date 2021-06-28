@@ -1,4 +1,3 @@
-  
 describe('When: I use the reading list feature', () => {
   beforeEach(() => {
     cy.startAt('/');

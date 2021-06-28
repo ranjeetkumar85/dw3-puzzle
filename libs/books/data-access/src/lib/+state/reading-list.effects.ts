@@ -14,7 +14,7 @@ import * as ReadingListActions from './reading-list.actions';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Store } from '@ngrx/store';
 
-const SNACH_BAR_CONFIG = {
+const SNACK_BAR_CONFIG = {
   UNDO_ACTION: 'Undo',
   DURATION: 4000
 }
@@ -86,15 +86,15 @@ export class ReadingListEffects implements OnInitEffects {
     filter(({item}) => item.isOpenSnackBar),
     map(({ item }) =>
       this.openSnackBar(
-        { id: item.bookId, ...item, isOpenSnackBar: false }, 
+        { ...item, id: item.bookId,  isOpenSnackBar: false }, 
         `${item.title}: removed from reading list`,
         false)
     )
   );
 
   openSnackBar(item: ReadingListItem | Book, message: string, isAdded: boolean) {      
-    this.snackBar.open(message, SNACH_BAR_CONFIG.UNDO_ACTION, {
-      duration: SNACH_BAR_CONFIG.DURATION
+    this.snackBar.open(message, SNACK_BAR_CONFIG.UNDO_ACTION, {
+      duration: SNACK_BAR_CONFIG.DURATION
     })
     .onAction()
     .subscribe(() =>
