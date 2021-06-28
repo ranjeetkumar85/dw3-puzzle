@@ -31,8 +31,12 @@
           </div>
           <p [innerHTML]="b.description"></p>
           <div>
-            <button mat-flat-button data-testing="add-item" color="primary"
-              (click)="addBookToReadingList(b)" [disabled]="b.isAdded">
+            <button 
+              mat-flat-button 
+              data-testing="add-item" 
+              color="primary"
+              (click)="addBookToReadingList(b)" 
+              [disabled]="b.isAdded">
               Want to Read
             </button>
           </div>
