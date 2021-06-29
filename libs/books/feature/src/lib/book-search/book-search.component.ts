@@ -4,6 +4,8 @@ import {
   addToReadingList,
   clearSearch,
   getAllBooks,
+  getBooksError,
+  getBooksLoaded,
   ReadingListBook,
   searchBooks
 } from '@tmo/books/data-access';
@@ -22,6 +24,9 @@ export class BookSearchComponent {
   searchForm = this.fb.group({
     term: ''
   });
+  getBooksLoaded$: Observable<boolean> = this.store.select(getBooksLoaded);
+  getBooksError$: Observable<string> = this.store.select(getBooksError);
+  noResultFoundText = 'No Result Found !!';
 
   constructor(
     private readonly store: Store,
