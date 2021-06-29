@@ -30,24 +30,24 @@
 </ng-container>
 <ng-container *ngIf="searchTerm && (getBooksError$ | async) === null else empty">
   <div class="book-grid">
-    <div class="book" data-testing="book-item" *ngFor="let b of books$ | async">
+    <div class="book" data-testing="book-item" *ngFor="let book of books$ | async">
       <div class="book--title">
-        {{ b.title }}
+        {{ book.title }}
       </div>
       <div class="book--content">
         <div class="book--content--cover">
-          <img src="{{ b.coverUrl }}" />
+          <img src="{{ book.coverUrl }}" />
         </div>
         <div class="book--content--info">
-          <div><strong>Author:</strong> {{ b.authors.join(',') }}</div>
-          <div><strong>Publisher:</strong> {{ b.publisher }}</div>
+          <div><strong>Author:</strong> {{ book.authors.join(',') }}</div>
+          <div><strong>Publisher:</strong> {{ book.publisher }}</div>
           <div>
-            <strong>Published:</strong> {{ formatDate(b.publishedDate) }}
+            <strong>Published:</strong> {{ formatDate(book.publishedDate) }}
           </div>
-          <p [innerHTML]="b.description"></p>
+          <p [innerHTML]="book.description"></p>
           <div>
             <button mat-flat-button data-testing="add-item" color="primary"
-              (click)="addBookToReadingList(b)" [disabled]="b.isAdded">
+              (click)="addBookToReadingList(book)" [disabled]="book.isAdded">
               Want to Read
             </button>
           </div>
