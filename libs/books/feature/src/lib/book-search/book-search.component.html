@@ -42,12 +42,16 @@
           <div><strong>Author:</strong> {{ book.authors.join(',') }}</div>
           <div><strong>Publisher:</strong> {{ book.publisher }}</div>
           <div>
-            <strong>Published:</strong> {{ formatDate(book.publishedDate) }}
+            <strong>Published:</strong> {{ book.publishedDate | date:'M/d/yyyy' }}
           </div>
           <p [innerHTML]="book.description"></p>
           <div>
-            <button mat-flat-button data-testing="add-item" color="primary"
-              (click)="addBookToReadingList(book)" [disabled]="book.isAdded">
+            <button 
+              mat-flat-button 
+              data-testing="add-item" 
+              color="primary"
+              (click)="addBookToReadingList(book)" 
+              [disabled]="book.isAdded">
               Want to Read
             </button>
           </div>
