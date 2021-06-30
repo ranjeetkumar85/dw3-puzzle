@@ -16,9 +16,9 @@
   </mat-form-field>
 </form>
 
-<div class="errorMessage" *ngIf="getBooksError$ | async">
+<div class="error-message" *ngIf="getBooksError$ | async">
   <p aria-live="assertive">
-    {{ noResultFoundText }}
+    {{ ERROR_TEXT }}
   </p>
 </div>
 <ng-container>

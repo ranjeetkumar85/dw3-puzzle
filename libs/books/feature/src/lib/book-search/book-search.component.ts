@@ -26,7 +26,7 @@ export class BookSearchComponent implements OnInit {
   });
   getBooksLoaded$: Observable<boolean> = this.store.select(getBooksLoaded);
   getBooksError$: Observable<string> = this.store.select(getBooksError);
-  noResultFoundText = 'No Result Found !!';
+  ERROR_TEXT = 'No Result Found !!';
 
   constructor(
     private readonly store: Store,

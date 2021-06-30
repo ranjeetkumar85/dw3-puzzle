@@ -12,7 +12,7 @@ form {
   display: grid;
   grid-template-columns: 50% 50%;
   grid-template-rows: auto;
-  @media only screen and (max-width: 762px) {
+  @media only screen and (max-width: 767px) {
     grid-template-columns: 100%;
   }
 }
@@ -23,7 +23,7 @@ form {
   margin: 2px;
   padding: $spacing-xxs;
   background-color: $gray10;
-  @media only screen and (max-width: 762px) {
+  @media only screen and (max-width: 767px) {
     padding: $spacing-xs;
     padding-bottom: $spacing-xs;
     margin-bottom: $spacing-xxs;
@@ -79,7 +79,7 @@ form {
   color: $black;
 }
 
-.errorMessage {
+.error-message {
   color: $red;
 }
 
