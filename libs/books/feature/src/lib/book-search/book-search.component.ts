@@ -27,6 +27,8 @@ export class BookSearchComponent {
   getBooksLoaded$: Observable<boolean> = this.store.select(getBooksLoaded);
   getBooksError$: Observable<string> = this.store.select(getBooksError);
   ERROR_TEXT = 'No Result Found !!';
+  SPINNER_DIAMETER = 40;
+  SPINNER_WIDTH = 2;
 
   constructor(
     private readonly store: Store,

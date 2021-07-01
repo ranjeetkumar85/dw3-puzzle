@@ -52,7 +52,7 @@ describe('Books Reducer', () => {
 
     it('failedAddToReadingList should undo book addition to the state', () => {
       const action = ReadingListActions.failedAddToReadingList({
-        book: createBook('B')
+        book: createBook('C')
       });
 
       const result: State = reducer(state, action);
@@ -61,7 +61,7 @@ describe('Books Reducer', () => {
 
     it('failedRemoveFromReadingList should undo book removal from the state', () => {
       const action = ReadingListActions.failedRemoveFromReadingList({
-        item: createReadingListItem('C')
+        item: createReadingListItem('B')
       });
 
       const result: State = reducer(state, action);

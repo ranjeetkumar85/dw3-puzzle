@@ -23,9 +23,9 @@
 </div>
 <ng-container>
   <mat-spinner
-    *ngIf="(getBooksLoaded$ | async) === false && (getBooksError$ | async) === null"
-    [diameter]="30"
-    [strokeWidth]="2"
+    *ngIf="(getBooksLoaded$ | async) === false"
+    [diameter]=SPINNER_DIAMETER
+    [strokeWidth]=SPINNER_WIDTH
   ></mat-spinner>
 </ng-container>
 <ng-container *ngIf="searchTerm && (getBooksError$ | async) === null else empty">

@@ -14,6 +14,8 @@
 1. Spinner should be implemented for better user experience for search API. `Implemented`
 2. Error message should be displayed for API failure. `Implemented`
 3. Missing Type Notation on reading-list components "item" being of Type : <any>. `Fixed by changing type to "ReadingListItem".`
+4. Used `ChangeDetectionStrategy.OnPush` in `book-search.component.html` since we don't change the state of the objects in component. It will perform better rather than default where each change of the object makes run change detector to resolve changes.
+
 ***Accessibility***
 - **Ran authomated scan using light house and corrected issues.**
   - Issue1- Buttons do not have an accessible name. `FIXED`
