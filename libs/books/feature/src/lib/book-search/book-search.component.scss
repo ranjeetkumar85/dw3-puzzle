@@ -77,6 +77,12 @@ form {
   min-height: 50vh;
   font-size: 1.5rem;
   color: $black;
+
+  button {
+    background: none;
+    border: none;
+    color: $pink-accent;
+  }
 }
 
 .error-message {

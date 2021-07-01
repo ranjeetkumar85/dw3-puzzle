@@ -1,36 +1,35 @@
-**Code smells**:
-    - Memory leak 
-            Using async pipe operator in 'book-search.component.html' instead of subscribing in book-search.component.ts file. This way unsubscription of resources is not required  manually in ts file. Added change detection to onpush for faster page load.
-           
-    - FormatDate -> 
-            `formatDate()` in `book-search.component.ts` should be replaced with date pipe provided by Angular. Updated 'book-search.component.html' file with date-pipe operator at line#26.
+***Are there any problems or code smells in the app? (Focus on code in the `libs/books` folder)***
+        - observable used for `this.store.select(getAllBooks)` is not unsubscribed in `book-search.component.ts` file. This may lead to memory leak and performance issue. 
+          Added `async` pipe in `book-search.component.html` file line#33 to avoid memory leak. This unsubscribes observable internally.  
 
-    - State Update -> 
-            Action('addToReadingList') triggers the effects to call API to add book into reading list and at the same time it updates the state by reducer without checking success or failure of backend APIs.Updated store only on success action('confirmedAddToReadingList')
+        - Custom method `formateDate()` is being used for date format in `book-search.component.html` at line#45.We can use pipe instead to convert date into required 
+                format. This will help in performance improvement since function will be triggered everytime on change detection 
+                and wherein having pipe would evaluate the expression only once.
+        
+        - Action(`addToReadingList` & `removeFromReadingList`) in `reading-list.reducer.ts` file triggers the effects to call API to add & remove book to & from reading list
+          and at the same time it updates the state by reducer without checking success or failure of backend APIs.Corrected the same and updated store only 
+          on success action 'confirmedAddToReadingList' & `confirmedRemoveFromReadingList`
 
-            Action('removeFromReadingList') triggers the effects to call API to remove book from reading list and at the same time it updates the state by reducer without checking success or failure of backend APIs.
-            Updated store only on success action ('confirmedRemoveFromReadingList')
-    
-    - Error handling ->  
-            In case if API is respoding with failure, current implementation is not showing any error message to user. 
+        - Error Handling is not proper for the API failure scenarioseIn case if API is respoding with failure, error message should be dispalyed in case of API failure.Updated code to display error message.
+        
+        - Naming convention is not proper in `book-search.component.html` at line#33.Corrected Naming convention in 'book-search.component.html'.
 
-    - Naming convention -> 
-             Corrected Naming convention in 'book-search.component.html'.
+        - Mobile UX was not correctly rendered. Book sections, reading list and buttons were overlapping. Corrected mobile view to provide better user experience. 
 
-**Improvements**:
-    - Spinner [Implemented] : Added spinner to to give better user experience while API responds. 
+        - Test case was broken for reading-list reducer because **failedAddToReadingList** and **failedRemoveFromReadingList** were not implemented in reducer.
 
-    - Error message to be displayed [Implemented] -  Enter junk value in search box as ('sfhkafhkadsfafsd'), in this case, application responds  with error. Added error message 'No record found' to give better experience to user. 
-
-    
-    - Mobile UX is not responsive -  Corrected alignment  for mobile view to provide better user experience. Error message for api failure should be displayed.
-
-    
+***Are there other improvements you would make to the app? What are they and why?***
+    - Spinner should be implemented for better user experience for search API. [Implemented] 
+    - Error message should be displayed for API failure.[Implemented]
+    - Missing Type Notation on reading-list components "item" being of Type : <any>. Fixed by changing type to "ReadingListItem".
 
 **Accessibility**:
-    Button highlighted - Done
-    Javascript to Anchor Tag - Done
-    Manual scan - 
-         1. Buttons do not have an accessible name - *FIXED*
-         2. Background and foreground colors do not have a sufficient contrast ratio - *FIXED*
+        - Ran authomated scan using light house and corrected issues.
+               Issue1- Buttons do not have an accessible name.
+               Issue2 - Background and foreground do not have a sufficient contrast ratio.
+  
+        -  Button highlighted - Done
+        -  Javascript to Anchor Tag - Done
+   
+
 

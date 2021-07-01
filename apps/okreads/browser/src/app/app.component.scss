@@ -20,6 +20,7 @@ h1 {
 
   button {
     padding: 0 $spacing-xs;
+    background-color: $pink-dark;
   }
 }
 
@@ -30,10 +31,6 @@ h1 {
     display: flex;
     align-items: center;
   }
-}
-
-.reading-list-button {
-  background-color: $pink-dark;
 }
 
 main {
