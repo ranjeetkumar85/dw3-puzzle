@@ -13,12 +13,15 @@ describe('BookSearchComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [BooksFeatureModule, 
-                NoopAnimationsModule, 
-                MatProgressSpinnerModule, 
-                SharedTestingModule
-              ],
-      schemas: [NO_ERRORS_SCHEMA]
+      imports: [
+        BooksFeatureModule, 
+        NoopAnimationsModule, 
+        MatProgressSpinnerModule, 
+        SharedTestingModule
+      ],
+      schemas: [
+          NO_ERRORS_SCHEMA
+      ]
     }).compileComponents();
   }));
 

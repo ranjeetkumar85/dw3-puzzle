@@ -51,7 +51,7 @@
               data-testing="add-item" 
               color="primary"
               (click)="addBookToReadingList(book)" 
-              [attr.aria-label]="' Want to Read'+book.title"
+              [attr.aria-label]="'Want to Read ' + book.title"
               [disabled]="book.isAdded">
               Want to Read
             </button>
