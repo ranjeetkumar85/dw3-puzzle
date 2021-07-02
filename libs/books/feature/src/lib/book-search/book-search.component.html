@@ -16,7 +16,7 @@
   </mat-form-field>
 </form>
 
-<div class="error-message" *ngIf="getBooksError$ | async">
+<div class="error" *ngIf="getBooksError$ | async">
   <p aria-live="assertive">
     {{ ERROR_TEXT }}
   </p>
@@ -36,7 +36,7 @@
       </div>
       <div class="book--content">
         <div class="book--content--cover">
-          <img src="{{ book.coverUrl }}" />
+          <img [src]=" book.coverUrl " alt=""/>
         </div>
         <div class="book--content--info">
           <div><strong>Author:</strong> {{ book.authors.join(',') }}</div>
@@ -51,7 +51,7 @@
               data-testing="add-item" 
               color="primary"
               (click)="addBookToReadingList(book)" 
-              [attr.aria-label]="book.title+' Want to Read'"
+              [attr.aria-label]="' Want to Read'+book.title"
               [disabled]="book.isAdded">
               Want to Read
             </button>
@@ -65,7 +65,7 @@
   <div class="empty">
     <p>
       Try searching for a topic, for example 
-      "<button role="button" 
+      "<button  
         aria-label="Try searching for a topic, for example JavaScript"
         (click)="searchExample()">
         JavaScript

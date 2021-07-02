@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Store } from '@ngrx/store';
 import {
   addToReadingList,
@@ -39,22 +39,16 @@ export class BookSearchComponent {
     return this.searchForm.value.term;
   }
 
-  formatDate(date: void | string) {
-    return date
-      ? new Intl.DateTimeFormat('en-US').format(new Date(date))
-      : undefined;
-  }
-
-  addBookToReadingList(book: Book) {
+  addBookToReadingList(book: Book): void {
     this.store.dispatch(addToReadingList({ book }));
   }
 
-  searchExample() {
+  searchExample(): void {
     this.searchForm.controls.term.setValue('javascript');
     this.searchBooks();
   }
 
-  searchBooks() {
+  searchBooks(): void {
     if (this.searchForm.value.term) {
       this.store.dispatch(searchBooks({ term: this.searchTerm }));
     } else {
