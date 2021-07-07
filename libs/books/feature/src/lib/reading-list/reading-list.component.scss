@@ -3,8 +3,8 @@
 :host {
   display: block;
   font-size: 0.75rem;
-  p{
-    @media only screen and (max-width: 767px) {
+  @media only screen and (max-width: 767px) {
+    .paragraph-padding {
       padding-left: $spacing-med;
     }
   }

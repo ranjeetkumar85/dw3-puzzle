@@ -153,4 +153,4 @@ Ready to submit? Please review the checklist below.
 2. Are all your features working as per requirements?
 3. Are lint, test, e2e passing?
 
-Once you are done, send the link to your repo to your T-Mobile manager for evaluation. 
+Once you are done, send the link to your repo to your T-Mobile manager for evaluation.
