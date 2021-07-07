@@ -31,8 +31,7 @@
   - Search icon was reading as button. Added `aria-label` to make this more meaningful for the user. `FIXED`
   - Reading `Reading List` along with header an focus was not moving correctly. `FIXED`
   - Background color of Reading list button was same as header. Changed it to pink-dark color to make it visible to the user. `FIXED`
-  - Alt attribute is missing in `reading-list.component.html` for image tag at line#4. Screen reader may announce the file name and path instead of proper content of image.
-    Added `alt=""` in image tag. `FIXED`
+  - Alt attribute is missing in `reading-list.component.html` for image tag at line#4. Screen reader may announce the file name and path instead of proper content of image.Added `alt=""` in image tag. `FIXED`
   - Screen reader should give priority to read error message. Added `area-live="assertive"` in book-search.component.html file at line#20.
   
 - `Javascript` is wrapped in anchor tag in `book-search.component.html` even this is not being used for redirection. Changed it to button element. `FIXED`
