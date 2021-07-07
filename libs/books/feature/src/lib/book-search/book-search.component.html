@@ -28,7 +28,7 @@
     [strokeWidth]=SPINNER_WIDTH
   ></mat-spinner>
 </ng-container>
-<ng-container *ngIf="searchTerm && (getBooksError$ | async) === null; else empty">
+<ng-container *ngIf="searchTerm && !(getBooksError$ | async); else empty">
   <div class="book-grid">
     <div class="book" data-testing="book-item" *ngFor="let book of books$ | async">
       <div class="book--title">
